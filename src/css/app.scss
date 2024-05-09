@@ -1,2 +1,13 @@
 // app global css in SCSS form
 @import '_spacing';
+
+// Color gradient for the header
+.q-header {
+  background: rgb(44, 39, 193);
+  background: linear-gradient(
+    60deg,
+    rgba(44, 39, 193, 1) 0%,
+    rgba(90, 26, 147, 1) 25%,
+    rgba(252, 13, 89, 1) 100%
+  );
+}

@@ -14,6 +14,9 @@
   .mr-#{$size} {
     margin-right: #{$size}px !important;
   }
+  .mb-#{$size} {
+    margin-bottom: #{$size}px !important;
+  }
   .my-#{$size} {
     margin-top: #{$size}px !important;
     margin-bottom: #{$size}px !important;
@@ -42,9 +45,6 @@
   .pb-#{$size} {
     padding-bottom: #{$size}px !important;
   }
-  .mb-#{$size} {
-    margin-bottom: #{$size}px !important;
-  }
   .h-#{$size} {
     min-height: #{$size}px !important;
     height: #{$size}px !important;
@@ -56,13 +56,13 @@
     max-width: #{$size}px !important;
   }
   .hp-#{$size} {
-    min-height: #{$size + "%"} !important;
-    height: #{$size + "%"} !important;
-    max-height: #{$size + "%"} !important;
+    min-height: #{$size + '%'} !important;
+    height: #{$size + '%'} !important;
+    max-height: #{$size + '%'} !important;
   }
   .wp-#{$size} {
-    min-width: #{$size + "%"} !important;
-    width: #{$size + "%"} !important;
-    max-width: #{$size + "%"} !important;
+    min-width: #{$size + '%'} !important;
+    width: #{$size + '%'} !important;
+    max-width: #{$size + '%'} !important;
   }
 }
