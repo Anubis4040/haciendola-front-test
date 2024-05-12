@@ -4,7 +4,7 @@ Este es un proyecto frontend construido con Quasar v2 y Vue 3. El proyecto permi
 
 ## Dependencias
 
-Para el correcto funcionamiento de este proyecto sera necesario tener en levatado el siguiente proyecot back
+Para el correcto funcionamiento de este proyecto será necesario tener levantada la API
 https://github.com/Anubis4040/haciendola-back-test
 
 ## Teclogias
@@ -20,16 +20,15 @@ Para instalar y ejecutar este proyecto, necesitarás tener instalado Node.js y n
 
 ```bash
 1. Clonar el repositorio
-2. Instala las dependencias: `npm install` o usar yarn segun su preferencia
+2. Instala las dependencias: `npm install`
 4. Definir las variables de entorno
-
 3. Ejecuta el servidor de desarrollo: `quasar dev`
 ```
 
 ## Uso
 
 Una vez que el servidor esté en funcionamiento, puedes abrir un navegador y navegar a `http://localhost:<puerto especificado>` para ver la aplicación en acción.
-Sera necesario crear un usuario la primera vez usando el formlario de registro.
+Será necesario crear un usuario la primera vez usando el formulario de registro.
 ![alt text](image.png)
-Puedes iniciar sesión con las credenciales del neuvo usuario creado y comenzar a administrar productos.
+Puedes iniciar sesión con las credenciales del nuevo usuario creado y comenzar a administrar productos.
 ![alt text](image-1.png)
