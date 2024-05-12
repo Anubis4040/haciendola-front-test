@@ -142,7 +142,6 @@ const listProducts = () => {
   mainInstance
     .get(`products?pagination[offset]=${offset.value}&pagination[limit]=${pagination.rowsPerPage}`)
     .then((res) => {
-      console.log(res.data);
       products.value = res.data.data;
     })
     .catch((err) => {
@@ -163,8 +162,7 @@ const listProducts = () => {
 const deleteProduct = () => {
   mainInstance
     .delete(`products/${selectedProduct.value}`)
-    .then((res) => {
-      console.log(res.data);
+    .then(() => {
       removeProduct(selectedProduct.value as string);
       $q.notify({
         color: 'positive',

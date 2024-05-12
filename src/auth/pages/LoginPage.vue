@@ -73,7 +73,6 @@ const login = () => {
       authStore.authenticated = true;
       localStorage.setItem('authenticated', 'true');
       router.push({ path: '/products' });
-      console.log('test')
     })
     .catch((err) => {
       console.log(err);

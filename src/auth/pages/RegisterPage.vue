@@ -93,11 +93,11 @@ const isPwd = ref(true);
 
 const register = () => {
   loading.value = true;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { confirmPassword, ...rest } = form;
   mainInstance
     .post('users', rest)
-    .then((res) => {
-      console.log(res.data)
+    .then(() => {
       router.push({ path: '/login' });
     })
     .catch((err) => {

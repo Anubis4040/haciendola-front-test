@@ -26,9 +26,7 @@ defineOptions({
   name: 'CreateProduct',
 });
 
-// TODO: Add the saveProduct function here
 const saveProduct = (product: Product) => {
-  console.log('pre save product', product);
   ProductStore.loading = true;
   mainInstance
     .post('products', product)

@@ -46,7 +46,6 @@ const getMe = () => {
 };
 
 const logout = () => {
-  console.log('auth/logout');
   mainInstance
     .post('auth/logout')
     .then(() => {

@@ -39,8 +39,7 @@ const updateProduct = (product: Product) => {
   productStore.loading = true;
   mainInstance
     .put(`products/${route.params.id}`, product)
-    .then((res) => {
-      console.log('updatedUser', res.data);
+    .then(() => {
       $q.notify({
         color: 'positive',
         textColor: 'white',
@@ -70,7 +69,4 @@ const updateProduct = (product: Product) => {
     })
 };
 
-// onMounted(() => {
-//   console.log(route.params.id);
-// });
 </script>

@@ -94,7 +94,6 @@ const product = ref<ProductForm>({
 // FUNCSTIONS
 
 function saveProduct() {
-  console.log(product.value);
   if (props.update) {
     emit('update', product.value);
   } else {
@@ -117,11 +116,9 @@ const setform = (data: Product) => {
 };
 
 const getProduct = (productId: string) => {
-  console.log('Product updated');
   mainInstance
     .get(`products/${productId}`)
     .then((res) => {
-      console.log(res.data);
       setform(res.data.data)
     })
     .catch((err) => {
