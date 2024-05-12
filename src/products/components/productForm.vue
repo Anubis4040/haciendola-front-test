@@ -4,107 +4,59 @@
     <q-form @submit="saveProduct" @reset="resetForm">
       <div class="row q-col-gutter-md">
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.handle"
-            label="Handle"
-            outlined
-            lazy-rules
-            :rules="[(val: string) => !!val || 'El handle es requerido']"
-          />
+          <q-input v-model="product.handle" label="Handle" outlined lazy-rules
+            :rules="[(val: string) => !!val || 'El handle es requerido']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.title"
-            label="Titulo"
-            outlined
-            lazy-rules
-            :rules="[(val: string) => !!val || 'El titulo es requerido']"
-          />
+          <q-input v-model="product.title" label="Titulo" outlined lazy-rules
+            :rules="[(val: string) => !!val || 'El titulo es requerido']" />
         </div>
         <div class="col-12">
-          <q-input
-            v-model="product.description"
-            label="Description"
-            outlined
-            lazy-rules
-            type="textarea"
-            :rules="[(val: string) => !!val || 'La descripcion es requerido']"
-          />
+          <q-input v-model="product.description" label="Description" outlined lazy-rules type="textarea"
+            :rules="[(val: string) => !!val || 'La descripcion es requerido']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.sku"
-            label="SKU"
-            outlined
-            lazy-rules
-            :rules="[(val: string) => !!val || 'El sku es requerido']"
-          />
+          <q-input v-model="product.sku" label="SKU" outlined lazy-rules
+            :rules="[(val: string) => !!val || 'El sku es requerido']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.grams"
-            label="Gramos"
-            outlined
-            lazy-rules
-            type="number"
-            :rules="[(val: number) => !!val || 'Los gramos son requeridos']"
-          />
+          <q-input v-model.number="product.grams" label="Gramos" outlined lazy-rules type="number"
+            :rules="[(val: number) => !!val || 'Los gramos son requeridos']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.stock"
-            label="Stock"
-            outlined
-            lazy-rules
-            type="number"
-            :rules="[(val: number) => !!val || 'El stock es requerido']"
-          />
+          <q-input v-model.number="product.stock" label="Stock" outlined lazy-rules type="number"
+            :rules="[(val: number) => !!val || 'El stock es requerido']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.price"
-            label="Precio"
-            outlined
-            lazy-rules
-            type="number"
-            :rules="[(val: number) => !!val || 'El precio es requerido']"
-          />
+          <q-input v-model.number="product.price" label="Precio" outlined lazy-rules type="number"
+            :rules="[(val: number) => !!val || 'El precio es requerido']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.comparePrice"
-            label="Precio de comparacion"
-            outlined
-            lazy-rules
-            type="number"
-            :rules="[(val: number) => !!val || 'El Precio de comparacion es requerido']"
-          />
+          <q-input v-model.number="product.comparePrice" label="Precio de comparacion" outlined lazy-rules type="number"
+            :rules="[(val: number) => !!val || 'El Precio de comparacion es requerido']" />
         </div>
         <div class="col-12 col-sm-6">
-          <q-input
-            v-model="product.barcode"
-            label="Codigo de barras"
-            outlined
-            lazy-rules
-            :rules="[(val: string) => !!val || 'El codigo de barras es requerido']"
-          />
+          <q-input v-model="product.barcode" label="Codigo de barras" outlined lazy-rules
+            :rules="[(val: string) => !!val || 'El codigo de barras es requerido']" />
         </div>
       </div>
-      <q-btn
-        type="submit"
-        color="primary"
-        :label="update ? 'Actualizar' : 'Guardar'"
-        class="q-mr-sm"
-      />
+      <q-btn :loading="ProductStore.loading" type="submit" color="primary" :label="update ? 'Actualizar' : 'Guardar'"
+        class="q-mr-sm" />
       <q-btn label="Reset" type="reset" color="primary" />
     </q-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-// import { Todo, Meta } from './models';
+import { onMounted, ref } from 'vue';
+import { Product, ProductForm } from '../interfaces/product';
+import { useProductsStore } from 'src/stores/products';
+import { mainInstance } from 'src/api/mainInstance';
+import { useQuasar } from 'quasar';
 
+// INITIALIZATION
+const $q = useQuasar();
+const ProductStore = useProductsStore();
 const emit = defineEmits(['save', 'update']);
 
 defineOptions({
@@ -112,23 +64,34 @@ defineOptions({
 });
 
 const props = defineProps({
+  userId: {
+    type: String,
+    default: null,
+  },
   update: {
     type: Boolean,
     default: false,
   },
 });
 
-const product = ref({
+// REACTIVE DATA
+
+const product = ref<ProductForm>({
   handle: '',
   title: '',
   description: '',
   sku: '',
-  grams: 0,
-  stock: 0,
-  price: 0,
-  comparePrice: 0,
+  grams: null,
+  stock: null,
+  price: null,
+  comparePrice: null,
   barcode: '',
 });
+
+// WATCHERS
+
+
+// FUNCSTIONS
 
 function saveProduct() {
   console.log(product.value);
@@ -139,17 +102,60 @@ function saveProduct() {
   }
 }
 
+const setform = (data: Product) => {
+  product.value = {
+    handle: data.handle,
+    title: data.title,
+    description: data.description,
+    sku: data.sku,
+    grams: data.grams,
+    stock: data.stock,
+    price: data.price,
+    comparePrice: data.comparePrice,
+    barcode: data.barcode,
+  };
+};
+
+const getProduct = (productId: string) => {
+  console.log('Product updated');
+  mainInstance
+    .get(`products/${productId}`)
+    .then((res) => {
+      console.log(res.data);
+      setform(res.data.data)
+    })
+    .catch((err) => {
+      console.log(err);
+      $q.notify({
+        color: 'negative',
+        textColor: 'white',
+        progress: true,
+        classes: 'text-medium',
+        position: 'top-right',
+        message: '¡Hubo un problema al buscar el producto!',
+        icon: 'error',
+        timeout: 3000,
+      });
+    });
+};
+
 function resetForm() {
   product.value = {
     handle: '',
     title: '',
     description: '',
     sku: '',
-    grams: 0,
-    stock: 0,
-    price: 0,
-    comparePrice: 0,
+    grams: null,
+    stock: null,
+    price: null,
+    comparePrice: null,
     barcode: '',
   };
 }
+
+onMounted(() => {
+  if (props.update) {
+    getProduct(props.userId);
+  }
+});
 </script>

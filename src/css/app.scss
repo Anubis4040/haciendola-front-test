@@ -1,8 +1,7 @@
 // app global css in SCSS form
 @import '_spacing';
 
-// Color gradient for the header
-.q-header {
+.main-color-gradient {
   background: rgb(44, 39, 193);
   background: linear-gradient(
     60deg,
@@ -10,4 +9,15 @@
     rgba(90, 26, 147, 1) 25%,
     rgba(252, 13, 89, 1) 100%
   );
+}
+
+// Color gradient for the header
+.q-header {
+  @extend .main-color-gradient;
+}
+
+// Background colors
+
+.bg-hl-secondary {
+  background-color: $hl-secondary !important;
 }

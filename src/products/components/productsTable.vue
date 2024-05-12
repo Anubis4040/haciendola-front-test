@@ -1,23 +1,70 @@
 <template>
   <div class="flex items-center justify-between">
     <h3 class="my-35">Listado de Productos</h3>
-    <q-btn
-      color="primary"
-      label="Crear producto"
-      to="/products/create"
-      icon="add"
-    />
+    <q-btn color="primary" label="Crear producto" to="/products/create" icon="add" />
   </div>
   <div>
-    <q-table title="Productos" :rows="rows" :columns="columns" row-key="name" />
+    <q-table :pagination="pagination" title="Productos" :rows="products" :columns="columns" row-key="name">
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <div class="q-gutter-sm">
+            <q-btn @click="() => { deleteDialog = true; setSelected(props.row.id) }" size="12px" unelevated round
+              color="negative" icon="delete" />
+            <q-btn @click="() => { editDialog = true; setSelected(props.row.id) }" size="12px" unelevated round
+              color="warning" icon="edit" />
+          </div>
+        </q-td>
+      </template>
+    </q-table>
   </div>
+  <q-dialog v-model="deleteDialog" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <q-avatar icon="delete" color="negative" text-color="white" />
+        <span class="q-ml-sm">¿ Estar seguro de que quieres borrar este producto ?</span>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn @click="deleteProduct" deleteProducts flat label="Borrar" color="negative" v-close-popup />
+        <q-btn @click="deleteDialog = false" flat label="Cancelar" color="primary" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="editDialog" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <q-avatar icon="delete" color="warning" text-color="white" />
+        <span class="q-ml-sm">¿ Quieres editar este producto ?</span>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn @click="$router.push({ name: 'updateUser', params: { id: selectedProduct } })" flat label="Editar"
+          color="primary" v-close-popup />
+        <q-btn @click="deleteDialog = false" flat label="Cancelar" color="grey" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { QTableColumn } from 'quasar';
+import { QTableColumn, useQuasar } from 'quasar';
+import { mainInstance } from 'src/api/mainInstance';
+import { computed, onMounted, reactive, ref } from 'vue';
+import { Product } from '../interfaces/product';
+
+const $q = useQuasar();
 
 defineOptions({
   name: 'productsTable',
+});
+
+const deleteDialog = ref<boolean>(false);
+const editDialog = ref<boolean>(false);
+const selectedProduct = ref<string | null>(null);
+const pagination = reactive<{ page: number, rowsPerPage: number }>({
+  page: 1,
+  rowsPerPage: 10
 });
 
 const columns: QTableColumn[] = [
@@ -58,7 +105,7 @@ const columns: QTableColumn[] = [
   },
   {
     name: 'comparePrice',
-    label: 'Iron (%)',
+    label: 'Precio de comparacion',
     field: 'comparePrice',
   },
   {
@@ -66,86 +113,86 @@ const columns: QTableColumn[] = [
     label: 'Codigo de barras',
     field: 'barcode',
   },
+  {
+    name: 'actions',
+    label: 'Acciones',
+    field: 'actions',
+  },
 ];
 
-const rows = [
-  {
-    handle: 'Frozen Yogurt',
-    title: 'Frozen Yogurt',
-    description: 'Delicious frozen yogurt',
-    sku: 'FY001',
-    grams: 150,
-    stock: 10,
-    price: 5.99,
-    comparePrice: 0,
-    barcode: '123456789',
-  },
-  {
-    handle: 'Ice cream sandwich',
-    title: 'Ice cream sandwich',
-    description: 'Yummy ice cream sandwich',
-    sku: 'ICS001',
-    grams: 200,
-    stock: 5,
-    price: 3.99,
-    comparePrice: 0,
-    barcode: '987654321',
-  },
-  {
-    handle: 'Eclair',
-    title: 'Eclair',
-    description: 'Delicious eclair',
-    sku: 'EC001',
-    grams: 180,
-    stock: 8,
-    price: 4.49,
-    comparePrice: 0,
-    barcode: '456789123',
-  },
-  {
-    handle: 'Chocolate bar',
-    title: 'Chocolate bar',
-    description: 'Delicious chocolate bar',
-    sku: 'CB001',
-    grams: 100,
-    stock: 15,
-    price: 2.99,
-    comparePrice: 0,
-    barcode: '9876543210',
-  },
-  {
-    handle: 'Gummy bears',
-    title: 'Gummy bears',
-    description: 'Yummy gummy bears',
-    sku: 'GB001',
-    grams: 250,
-    stock: 20,
-    price: 1.99,
-    comparePrice: 0,
-    barcode: '1234567890',
-  },
-  {
-    handle: 'Caramel popcorn',
-    title: 'Caramel popcorn',
-    description: 'Delicious caramel popcorn',
-    sku: 'CP001',
-    grams: 120,
-    stock: 12,
-    price: 3.49,
-    comparePrice: 0,
-    barcode: '0987654321',
-  },
-  {
-    handle: 'Sour candy',
-    title: 'Sour candy',
-    description: 'Tangy sour candy',
-    sku: 'SC001',
-    grams: 80,
-    stock: 18,
-    price: 1.49,
-    comparePrice: 0,
-    barcode: '0123456789',
-  },
-  // Add more rows with random data here
-];
+const products = ref<Product[]>([]);
+
+// COMPUTEDS
+
+const offset = computed(() => (pagination.page - 1) * pagination.rowsPerPage);
+
+// FUNCSTIONS
+
+const setSelected = (id: string) => {
+  selectedProduct.value = id;
+};
+
+// Remover elemento de la lista de productos por id
+const removeProduct = (id: string) => {
+  const index = products.value.findIndex(product => product.id === id);
+  products.value.splice(index, 1);
+};
+
+const listProducts = () => {
+  mainInstance
+    .get(`products?pagination[offset]=${offset.value}&pagination[limit]=${pagination.rowsPerPage}`)
+    .then((res) => {
+      console.log(res.data);
+      products.value = res.data.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      $q.notify({
+        color: 'negative',
+        textColor: 'white',
+        progress: true,
+        classes: 'text-medium',
+        position: 'top-right',
+        message: '¡Hubo un problema al listar los products!',
+        icon: 'error',
+        timeout: 3000,
+      });
+    });
+};
+
+const deleteProduct = () => {
+  mainInstance
+    .delete(`products/${selectedProduct.value}`)
+    .then((res) => {
+      console.log(res.data);
+      removeProduct(selectedProduct.value as string);
+      $q.notify({
+        color: 'positive',
+        textColor: 'white',
+        progress: true,
+        classes: 'text-medium',
+        position: 'top-right',
+        message: '¡Producto borrado con exito!',
+        icon: 'verified',
+        timeout: 3000,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      $q.notify({
+        color: 'negative',
+        textColor: 'white',
+        progress: true,
+        classes: 'text-medium',
+        position: 'top-right',
+        message: '¡Hubo un problema al borrar el producto!',
+        icon: 'error',
+        timeout: 3000,
+      });
+    });
+};
+
+onMounted(() => {
+  listProducts();
+});
 </script>

@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import { LocalStorage } from 'quasar';
 
 /*
  * If not building with SSR mode, you can
@@ -20,7 +21,9 @@ import routes from './routes';
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+    : process.env.VUE_ROUTER_MODE === 'history'
+    ? createWebHistory
+    : createWebHashHistory;
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -30,6 +33,22 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  Router.beforeEach((to, from, next) => {
+    const authenticated = LocalStorage.getItem('authenticated')
+      ? JSON.parse(LocalStorage.getItem('authenticated') as string)
+      : false;
+
+    if ('auth' in to.meta && to.meta.auth && authenticated) {
+      next();
+    } else if ('auth' in to.meta && to.meta.auth && !authenticated) {
+      next({ path: '/login' });
+    } else if ('auth' in to.meta && !to.meta.auth && authenticated) {
+      next({ path: '/' });
+    } else {
+      next();
+    }
   });
 
   return Router;

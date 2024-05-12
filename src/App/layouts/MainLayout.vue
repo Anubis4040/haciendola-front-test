@@ -2,20 +2,11 @@
   <q-layout view="hHh Lpr lff">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> Haciendola Dahsboard </q-toolbar-title>
 
-        <q-avatar>
-          <img src="../../assets/default-avatar.jpg" />
-        </q-avatar>
+        <UserAvatar />
       </q-toolbar>
     </q-header>
 
@@ -23,11 +14,7 @@
       <q-list>
         <q-item-label header> Modulos </q-item-label>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -42,6 +29,7 @@ import { ref } from 'vue';
 import EssentialLink, {
   EssentialLinkProps,
 } from '../components/EssentialLink.vue';
+import UserAvatar from '../components/UserAvatar.vue';
 
 defineOptions({
   name: 'MainLayout',

@@ -13,7 +13,7 @@
 import { PropType } from 'vue';
 import { Route } from '../interfaces/route';
 
-const props = defineProps({
+defineProps({
   routes: {
     type: Array as PropType<Route[]>,
     default: () => [{ label: 'Home', to: '/' }],
