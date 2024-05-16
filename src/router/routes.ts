@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/new-password/:token',
+    path: '/new-password',
     component: LoginLayout,
     children: [{ path: '', component: NewPassword }],
   },

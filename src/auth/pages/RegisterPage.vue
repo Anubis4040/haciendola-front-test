@@ -64,6 +64,10 @@
             class="bg-hl-secondary full-width q-mb-lg text-white fs-17 br-4 text-bold">
             Registrarse
           </q-btn>
+
+          <router-link to="/login">
+            <p class="q-mb-xs text-center">¿Ya tienes una cuenta?</p>
+          </router-link>
         </q-form>
       </q-card-section>
     </q-card>
